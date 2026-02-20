@@ -1,4 +1,4 @@
-# Programación Distribuida - COTECNOVA 2026
+# Programación Distribuida
 
 ---
 
