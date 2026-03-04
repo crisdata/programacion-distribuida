@@ -2,6 +2,9 @@ import asyncio  # Importa la librería para programación asíncrona
 
 contador_clientes = 0 #Variable global
 
+# Lock asíncrono para proteger la sección crítica
+lock = asyncio.Lock()
+
 # Función que maneja cada cliente (coroutine)
 async def handle_client(reader, writer):
     global contador_clientes #Accede a la variable global
@@ -12,9 +15,10 @@ async def handle_client(reader, writer):
     # Convierte los bytes recibidos en texto
     name = data.decode()
 
-    # Incrementa el contador
-    contador_clientes += 1
-    numero_cliente = contador_clientes  # Guarda el número actual
+    async with lock:
+        # Solo un cliente a la vez puede ejecutar esto
+        contador_clientes += 1 # Incrementa el contador
+        numero_cliente = contador_clientes  # Guarda el número actual
 
     # Simula el tiempo de atención.
     await asyncio.sleep(5) #Pausa asincronica de 5 segundos

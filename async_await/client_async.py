@@ -3,12 +3,10 @@ import time     # Librería para medir tiempo
 
 async def main():
     # Abre conexión con el servidor
-    reader, writer = await asyncio.open_connection(
-        "127.0.0.1", 5000
-    )
+    reader, writer = await asyncio.open_connection("127.0.0.1", 5000)
 
-    # Solicita el nombre al usuario
-    name = input("Ingresa tu nombre: ")
+    # Lee el nombre desde la terminal o desde el pipe (echo "Cliente_$i")
+    name = input().strip()
 
     # Guarda el tiempo inicial
     start_time = time.time()
@@ -25,16 +23,13 @@ async def main():
     # Guarda el tiempo final
     end_time = time.time()
 
-    # Muestra respuesta
-    print(data.decode())
+    # Muestra la respuesta y el tiempo de atención
+    print(f"[{name}] → {data.decode()}")
+    print(f"[{name}] → Tiempo: {round(end_time - start_time, 2)}s")
 
-    # Calcula el tiempo total de atención
-    print(f"Tiempo de atención: {round(end_time - start_time, 2)} segundos")
-
-    # Cierra la conexión
+    # Cierra la conexión limpiamente
     writer.close()
     await writer.wait_closed()
-
 
 # Ejecuta el cliente
 asyncio.run(main())
